@@ -1,58 +1,50 @@
-name : Run Jmeter Tests
+name : Run JMeter Tests
 
 on:
     push:
         branches:
-             -   main
-        paths:  
-             -   'github/workflows/run-jmeter.yml'
+            -   main
+        paths:
+            -   'github/workflows/run-jmeter.yml'
 
-    workflow_dispatch:  
+    workflow_dispatch:
 
 
 jobs:
     jmeter-tests:
-         runs-on: ubuntu-latest
+        runs-on: ubuntu-latest
 
-         steps:
+        steps:
+        -   name: Checkout Code
+            uses: actions/checkout@v4
+        -   name: Setup Java
+            uses: actions/setup-java@v4
+            with:
+                java-version: '11'
+                distribution: 'temurin'
 
-         -   name: Checkout Code
-             uses: actions/checkout@v4
-
-
-         -   name: Setup Java
-             uses: actions/setup-java@v4
-             
-             with:
-                 java-version: '11'
-                 distribution: 'temurin'
-
-         -   name: Install JMeter
-             run: |
+        -   name: Install JMeter
+            run: |
                 wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.6.3.tgz
-                tar -xzf apache-jmeter-5.6.3.tgz 
-                mv apache-jmeter-5.6.3 ~/jmeter 
+                tar -xzf apache-jmeter-5.6.3.tgz
+                mv apache-jmeter-5.6.3 ~/jmeter
 
-         -   name: Run JMeter Tests
-             run: |
-                 ~/jmeter/bin/jmeter -n -t "01_PreProc JSR223 PreProcessor Demo.jmx" -l results.jtl
+        -   name : Run JMeter Tests
+            run: |
+                ~/jmeter/bin/jmeter -n -t "01_PreProc JSR223 PreProcessor Demo.jmx" -l results.jtl
 
-         -   name: Generate JMeter HTML Report
-             run: |
-                 ~/jmeter/bin/jmeter -g results.jtl -o html-report
+        -   name: Generate JMeter HTML Report
+            run: |
+                ~/jmeter/bin/jmeter -g results.jtl -o html-report
 
-         -   name: Upload HTML Report
-             uses: actions/upload-artifact@v4
+        -   name: Upload HTML Report
+            uses: actions/upload-artifact@v4
+            with:
+                name: jmeter-html-report
+                path: html report
 
-             with:
-                 name: jmeter-html-report
-                 path: html report
-
-         -   name: upload JMeter report
-             uses: actions/upload-aritifact@v4
-
-             with:
-                 name: jmeter-results
-                 path: results.jtl 
-
-
+        -   name : Upload JMeter report
+            uses:  actions/upload-artifact@v4
+            with:
+                name: jmeter-results
+                path: results.jtl
