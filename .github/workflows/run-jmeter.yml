@@ -31,7 +31,7 @@ jobs:
 
         -   name : Run JMeter Tests
             run: |
-                ~/jmeter/bin/jmeter -n -t "01_PreProc JSR223 PreProcessor Demo.jmx" -l results.jtl
+                ~/jmeter/bin/jmeter -n -t "Project1.jmx" -l results.jtl
 
         -   name: Generate JMeter HTML Report
             run: |
